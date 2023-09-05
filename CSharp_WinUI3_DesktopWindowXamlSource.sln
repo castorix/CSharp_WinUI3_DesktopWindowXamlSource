@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34018.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp_WinUI3_DesktopWindowXamlSource", "CSharp_WinUI3_DesktopWindowXamlSource.csproj", "{6B0AB771-C3BD-481F-B15A-906BEAB18CED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B0AB771-C3BD-481F-B15A-906BEAB18CED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B0AB771-C3BD-481F-B15A-906BEAB18CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B0AB771-C3BD-481F-B15A-906BEAB18CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B0AB771-C3BD-481F-B15A-906BEAB18CED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {613568AD-EEC2-4479-B6A4-0B717FF16C1A}
+	EndGlobalSection
+EndGlobal
