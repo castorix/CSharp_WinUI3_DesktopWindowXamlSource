@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Net;
 using System.Resources;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -19,7 +20,21 @@ namespace CSharp_WinUI3_DesktopWindowXamlSource
 {
     public partial class Form1 : Form
     {
+        public delegate int SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, uint dwRefData);
+
+        [DllImport("Comctl32.dll", SetLastError = true)]
+        public static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint uIdSubclass, uint dwRefData);
+
+        [DllImport("Comctl32.dll", SetLastError = true)]
+        public static extern int DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
+        public const int WM_DPICHANGED = 0x02E0;
+
         public Microsoft.UI.Xaml.Hosting.DesktopWindowXamlSource? m_dwxs = null;
+        private SUBCLASSPROC SubClassDelegate;
+
+        public int m_nXPos = 382, m_nYPos = 20, m_nWidth = 400, m_nHeight = 600;
+
         public Form1()
         {
             //WinRT.ComWrappersSupport.InitializeComWrappers();
@@ -35,7 +50,9 @@ namespace CSharp_WinUI3_DesktopWindowXamlSource
             m_dwxs.Initialize(myWndId);
             // Microsoft.UI.Content.DesktopChildSiteBridge
             var sb = m_dwxs.SiteBridge;
-            Windows.Graphics.RectInt32 rect = new Windows.Graphics.RectInt32(382, 20, 400, 600);
+            var csv = sb.SiteView;
+            var rs = csv.RasterizationScale;
+            Windows.Graphics.RectInt32 rect = new Windows.Graphics.RectInt32((int)(m_nXPos * rs), (int)(m_nYPos * rs), (int)(m_nWidth * rs), (int)(m_nHeight * rs));
             sb.MoveAndResize(rect);
             richTextBox1.Text =
             @"  <Grid xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
@@ -44,8 +61,10 @@ namespace CSharp_WinUI3_DesktopWindowXamlSource
                     Background='Black'>
                     <controls:ColorPicker x:Name='cp1' IsAlphaEnabled='False' IsMoreButtonVisible='True' Margin='0,10,0,0'>
                     </controls:ColorPicker>
-            </Grid>"; 
-           CenterToScreen();
+            </Grid>";
+            CenterToScreen();
+
+            SubClassDelegate = new SUBCLASSPROC(WindowSubClass);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -230,6 +249,23 @@ namespace CSharp_WinUI3_DesktopWindowXamlSource
                 }
             }
             return null;
-        } 
+        }
+
+        private int WindowSubClass(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, uint dwRefData)
+        {
+            switch (uMsg)
+            {
+                case WM_DPICHANGED:
+                    {
+                        var sb = m_dwxs.SiteBridge;
+                        var csv = sb.SiteView;
+                        var rs = csv.RasterizationScale;
+                        Windows.Graphics.RectInt32 rect = new Windows.Graphics.RectInt32((int)(m_nXPos * rs), (int)(m_nYPos * rs), (int)(m_nWidth * rs), (int)(m_nHeight * rs));
+                        sb.MoveAndResize(rect);
+                    }
+                    break;              
+            }
+            return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+        }
     }
 }
