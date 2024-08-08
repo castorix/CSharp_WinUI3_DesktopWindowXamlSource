@@ -64,7 +64,8 @@ namespace CSharp_WinUI3_DesktopWindowXamlSource
             </Grid>";
             CenterToScreen();
 
-            SubClassDelegate = new SUBCLASSPROC(WindowSubClass);
+            //SubClassDelegate = new SUBCLASSPROC(WindowSubClass);
+            //bool bReturn = SetWindowSubclass(this.Handle, SubClassDelegate, 0, 0);
         }
 
         private void button1_Click(object sender, EventArgs e)
